@@ -1,10 +1,11 @@
 import {Canvas, extend} from '@react-three/fiber';
 import gatorURL from './images/gator.jpg'
 import {useTexture} from '@react-three/drei';
-import { shaderMaterial } from '@react-three/drei';
+import { shaderMaterial, OrbitControls } from '@react-three/drei';
 import { vertexShader, fragmentShader } from './Shader';
 import {Suspense} from 'react';
 import * as THREE from 'three';
+import { DoubleSide } from 'three';
 
 const ImageMaterial = shaderMaterial(
   {
@@ -12,7 +13,7 @@ const ImageMaterial = shaderMaterial(
     brightness: 1.0
   },
   vertexShader,
-  fragmentShader,
+  fragmentShader
 );
 
 extend({ ImageMaterial });
@@ -26,7 +27,7 @@ const ImageShader = () => {
   console.log(gator);
 
   return (
-    <mesh>
+    <mesh scale={0.005}>
         <planeBufferGeometry args={[width, height, 16, 16]} />
         <imageMaterial attach="material" uTexture={gator} brightness={5.0} />
     </mesh>
@@ -35,7 +36,8 @@ const ImageShader = () => {
 
 function App() {
   return (
-    <Canvas camera={{position: [0, 0, 1000]}} >
+    <Canvas camera={{ far: 3000, position: [0, 0, 5] }} >
+      <OrbitControls />
       <ambientLight />
       <Suspense fallback={null}>
         <ImageShader />
