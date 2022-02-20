@@ -5,7 +5,7 @@ import { shaderMaterial, OrbitControls } from '@react-three/drei';
 import { vertexShader, fragmentShader } from './Shader';
 import * as THREE from 'three';
 import { DoubleSide } from 'three';
-import { useControls } from 'leva'
+import { useControls, Leva } from 'leva'
 import gatorURL from './images/gator.jpg';
 import stonesURL from './images/stones.jpg';
 
@@ -56,7 +56,7 @@ const ImageShader = () => {
   return (
     <>
       
-    <mesh scale={0.005}>
+    <mesh scale={0.005} >
         <planeBufferGeometry args={[width, height, 16, 16]} />
         <imageMaterial 
           attach="material"
@@ -75,15 +75,18 @@ const ImageShader = () => {
 
 function App() {
   return (
-    <Canvas camera={{position: [0, 0, 6] }}>
-      <color attach="background" args={['#1b1d17']} />
-      <fog attach="fog" args={['#202020']} />
-      <OrbitControls />
-      <ambientLight />
-      <Suspense fallback={null}>
-        <ImageShader />
-      </Suspense>
-    </Canvas>
+    <>
+      <Leva collapsed />
+      <Canvas camera={{position: [0, 0, 6] }}>
+        <color attach="background" args={['#1b1d17']} />
+        <fog attach="fog" args={['#202020']} />
+        <OrbitControls />
+        <ambientLight />
+        <Suspense fallback={null}>
+          <ImageShader />
+        </Suspense>
+      </Canvas>
+    </>
   );
 }
 
