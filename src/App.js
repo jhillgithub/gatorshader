@@ -5,7 +5,7 @@ import { shaderMaterial, OrbitControls } from '@react-three/drei';
 import { vertexShader, fragmentShader } from './Shader';
 import * as THREE from 'three';
 import { DoubleSide } from 'three';
-import { useControls, Leva } from 'leva'
+import { useControls, Leva, folder } from 'leva'
 import gatorURL from './images/gator.jpg';
 import stonesURL from './images/stones.jpg';
 
@@ -32,18 +32,20 @@ const ImageShader = () => {
         max: 2.0,
         step: 0.01,
       },
-      shadows: {
-        value: 1.75,
-        min: 0.0,
-        max: 2.0,
-        step: 0.1,
-      }, 
-      highlights: {
-        value: 0.2,
-        min: 0.0,
-        max: 2.0,
-        step: 0.1,
-      }, 
+      lighting: folder({
+        shadows: {
+          value: 1.75,
+          min: 0.0,
+          max: 2.0,
+          step: 0.1,
+        }, 
+        highlights: {
+          value: 0.2,
+          min: 0.0,
+          max: 2.0,
+          step: 0.1,
+        }
+      },{collapsed: true})
     }
   )
   const gator = useTexture(gatorURL);
@@ -76,7 +78,7 @@ const ImageShader = () => {
 function App() {
   return (
     <>
-      <Leva collapsed />
+      <Leva titleBar={false} />
       <Canvas camera={{position: [0, 0, 6] }}>
         <color attach="background" args={['#1b1d17']} />
         <fog attach="fog" args={['#202020']} />
