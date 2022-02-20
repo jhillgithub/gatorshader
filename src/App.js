@@ -1,4 +1,4 @@
-import {Canvas, extend} from '@react-three/fiber';
+import {Canvas, extend, useFrame, useThree} from '@react-three/fiber';
 import gatorURL from './images/gator.jpg';
 import stonesURL from './images/stones.jpg';
 import {useTexture, Environment} from '@react-three/drei';
@@ -7,12 +7,15 @@ import { vertexShader, fragmentShader } from './Shader';
 import {Suspense} from 'react';
 import * as THREE from 'three';
 import { DoubleSide } from 'three';
+import { useControls } from 'leva'
 
 const ImageMaterial = shaderMaterial(
   {
     uTexture: new THREE.Texture(),
     uDisplacement: new THREE.Texture(),
-    brightness: 1.0
+    uDisplaceAmount: 0.0,
+    uShadows: 0.0,
+    uHighlights: 0.0 
   },
   vertexShader,
   fragmentShader
@@ -21,6 +24,28 @@ const ImageMaterial = shaderMaterial(
 extend({ ImageMaterial });
 
 const ImageShader = () => {
+  const { displaceAmount, shadows, highlights } = useControls(
+    { 
+      displaceAmount: {
+        value: 0.075,
+        min: 0.0,
+        max: 2.0,
+        step: 0.01,
+      },
+      shadows: {
+        value: 1.75,
+        min: 0.0,
+        max: 2.0,
+        step: 0.1,
+      }, 
+      highlights: {
+        value: 0.2,
+        min: 0.0,
+        max: 2.0,
+        step: 0.1,
+      }, 
+    }
+  )
   const gator = useTexture(gatorURL);
   const displacement = useTexture(stonesURL);
   // gator.encoding = THREE.sRGBEncoding;
@@ -37,18 +62,22 @@ const ImageShader = () => {
           side={DoubleSide} 
           uTexture={gator} 
           uDisplacement={displacement} 
-          brightness={3.0} />
+          uDisplaceAmount={displaceAmount}
+          uShadows={shadows}
+          uHighlights={highlights} 
+        />
     </mesh>
   )
 }
 
+
 function App() {
   return (
-    <Canvas camera={{ far: 3000, position: [0, 0, 5] }} style={{
+    <Canvas camera={{position: [0, 0, 5] }} style={{
       // background: "#1b1d17"
     }}>
       <color attach="background" args={['#1b1d17']} />
-      <fog attach="fog" args={['#202020', 5, 20]} />
+      <fog attach="fog" args={['#202020']} />
       <OrbitControls />
       <ambientLight />
       <Suspense fallback={null}>
