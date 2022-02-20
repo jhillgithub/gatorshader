@@ -1,13 +1,13 @@
-import {Canvas, extend, useFrame, useThree} from '@react-three/fiber';
-import gatorURL from './images/gator.jpg';
-import stonesURL from './images/stones.jpg';
-import {useTexture, Environment} from '@react-three/drei';
+import {Suspense} from 'react';
+import {Canvas, extend} from '@react-three/fiber';
+import {useTexture} from '@react-three/drei';
 import { shaderMaterial, OrbitControls } from '@react-three/drei';
 import { vertexShader, fragmentShader } from './Shader';
-import {Suspense} from 'react';
 import * as THREE from 'three';
 import { DoubleSide } from 'three';
 import { useControls } from 'leva'
+import gatorURL from './images/gator.jpg';
+import stonesURL from './images/stones.jpg';
 
 const ImageMaterial = shaderMaterial(
   {
@@ -52,9 +52,10 @@ const ImageShader = () => {
   // gator.minFilter = THREE.LinearFilter;
   // gator.needsUpdate = true;
   const { width, height } = gator.image;
-  console.log(gator);
 
   return (
+    <>
+      
     <mesh scale={0.005}>
         <planeBufferGeometry args={[width, height, 16, 16]} />
         <imageMaterial 
@@ -67,21 +68,19 @@ const ImageShader = () => {
           uHighlights={highlights} 
         />
     </mesh>
+    </>
   )
 }
 
 
 function App() {
   return (
-    <Canvas camera={{position: [0, 0, 5] }} style={{
-      // background: "#1b1d17"
-    }}>
+    <Canvas camera={{position: [0, 0, 6] }}>
       <color attach="background" args={['#1b1d17']} />
       <fog attach="fog" args={['#202020']} />
       <OrbitControls />
       <ambientLight />
       <Suspense fallback={null}>
-        {/* <Environment preset={"night"} background /> */}
         <ImageShader />
       </Suspense>
     </Canvas>
